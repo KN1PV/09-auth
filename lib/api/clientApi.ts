@@ -59,40 +59,40 @@ export const deleteNote = async (noteId: string): Promise<Note> => {
 };
 
 export const fetchNoteById = async (noteId: string): Promise<Note> => {
-  const response = await nextServer.get<Note>(`${baseURL}/notes/${noteId}`)
-
+  const response = await nextServer.get<Note>(`${baseURL}/notes/${noteId}`);
   return response.data;
-}
+};
 
 export const loginUser = async (userData: UserRequest): Promise<User> => {
-  const response = await nextServer.post<User>(`/auth/login`, userData);
+  const response = await nextServer.post<User>(`${baseURL}/auth/login`, userData);
   return response.data;
 };
 
 export const registerUser = async (userData: UserRequest): Promise<User> => {
-  const response = await nextServer.post<User>(`/auth/register`, userData);
+  const response = await nextServer.post<User>(`${baseURL}/auth/register`, userData);
   return response.data;
 };
-export const logoutUser = async () => {
-  const response = await nextServer.post(`/auth/logout`)
+
+export const logoutUser = async (): Promise<{ message: string }> => {
+  const response = await nextServer.post<{ message: string }>(`${baseURL}/auth/logout`);
   return response.data;
-}
+};
 
 export const editUser = async (user: AuthUserData): Promise<User> => {
-  const responce = await nextServer.patch<AuthUserData>("/users/me", user);
-  return responce.data;
+  const response = await nextServer.patch<User>(`${baseURL}/users/me`, user);
+  return response.data;
 };
 
 export const getMe = async (): Promise<User> => {
-  const response = await nextServer.get<User>("/users/me")
+  const response = await nextServer.get<User>(`${baseURL}/users/me`);
   return response.data;
-}
+};
 
-export async function checkSession(): Promise<boolean> {
+export async function checkSession(): Promise<{ isAuthenticated: boolean }> {
   try {
-    await nextServer.get("/auth/session");
-    return true;
+    const response = await nextServer.get<{ isAuthenticated: boolean }>(`${baseURL}/auth/session`);
+    return response.data;
   } catch {
-    return false;
+    return { isAuthenticated: false };
   }
 }
